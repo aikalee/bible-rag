@@ -1,7 +1,7 @@
 # bible_rag
-## Source of commentary
+## The Commentary
 https://enduringword.com/bible-commentary/
-## Copyright of the commentary
+### Copyright of the commentary
 © 1996-Present Copyright - The Enduring Word Bible Commentary by David Guzik
 ## Declaration
 This Bible RAG is not for commercial purpose.
