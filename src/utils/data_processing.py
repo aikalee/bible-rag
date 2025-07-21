@@ -8,12 +8,6 @@ import re
 
 def get_content(subpath):
 
-    matched = re.search(r"(.+)-(\d+)", subpath)
-    assert matched
-    
-    book = matched.group(1)
-    chapter = matched.group(2)
-
     url = f"https://enduringword.com/bible-commentary/{subpath}/"
     response = requests.get(url)
 
@@ -232,11 +226,13 @@ def parse_content(subpath, content, doc_id):
 
             if child.has_attr("class"):
                
-                assert child.get("class")[0] in ["p1", "s1"]
+                if child.get("class")[0] in ["p1", "s1"]:
                 
-                create_doc()
-                verse = []
-                commentary = []
+                    create_doc()
+                    verse = []
+                    commentary = []
+                else:
+                    raise ValueError("The document does not end with <p> with attribute class p1 or s1.")
          
             elif child.has_attr("style"):
                 
@@ -289,8 +285,8 @@ def to_json(read_path, write_path):
 
 
 def main():
-    READ_PATH = "../../data/processed/chapter_list.pkl"
-    WRITE_PATH = "../../data/processed/commentary.json"
+    READ_PATH = "../../data/chapter_list.pkl"
+    WRITE_PATH = "../../data/commentary.json"
     
     to_json(READ_PATH, WRITE_PATH)
 
