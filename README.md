@@ -1,6 +1,9 @@
-# Bible Commentary Retrieval-Augmented Generation
-- Length of documents in the corpus: 9318
-- 
+# Bible Commentary RAG
+- Length of the corpus: 9318
+- Embedding model: BAAI/bge-small-en-v.15
+- Reranker: BAAI/bge-reranker
+- Generation model: meta-llama/Llama-3.3-70B-Instruct-Turbo-Free
+
 ## Attribution
 
 This project uses content from the *Enduring Word Bible Commentary* by David Guzik.
