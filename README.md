@@ -1,5 +1,6 @@
-# bible_rag
+# Bible Commentary Retrieval-Augmented Generation
 - Length of documents in the corpus: 9318
+- 
 ## Attribution
 
 This project uses content from the *Enduring Word Bible Commentary* by David Guzik.
