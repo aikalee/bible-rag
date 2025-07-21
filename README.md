@@ -1,10 +1,14 @@
 # Bible Commentary RAG
 ## Framework
-- **Length of the corpus:** 9318
-- **Search Function:** A hybrid approach combining FAISS for dense vector retrieval and Whoosh for BM25 sparse retrieval, followed by result re-ranking.
+### Data processing
+- **Number of documents in the corpus:** 9318
 - **Embedding Text:** Only titles, subtitles, and verses are embedded or indexed, due to the embedding model’s context window limitations.
 
-## Models
+### Search Function
+- **Searching Approach:** A hybrid approach combining FAISS for dense vector retrieval and Whoosh for BM25 sparse retrieval, followed by result re-ranking.
+- **Reranker Quantization:** [TO BE UPDATED]
+
+### Models
   
 |                |Model Name                                  |  
 |----------------|--------------------------------------------|
