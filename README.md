@@ -1,12 +1,18 @@
 # Bible Commentary RAG
-- Length of the corpus: 9318
-- Embedding model: BAAI/bge-small-en-v.15
-- Reranker: BAAI/bge-reranker
-- Generation model: meta-llama/Llama-3.3-70B-Instruct-Turbo-Free
+## Framework
+- **Length of the corpus:** 9318
+- **Search Function:** A hybrid approach combining FAISS for dense vector retrieval and Whoosh for BM25 sparse retrieval, followed by result re-ranking.
+- **Embedding Text:** Only titles, subtitles, and verses are embedded or indexed, due to the embedding model’s context window limitations.
+  
+|                |Model Name                                  |  
+|----------------|--------------------------------------------|
+|Embedding model |BAAI/bge-small-en-v1.5                      |
+|Reranker        |BAAI/bge-reranker                           |
+|Generation model|meta-llama/Llama-3.3-70B-Instruct-Turbo-Free|
 
-## Attribution
+## Data Source and Attribution
 
-This project uses content from the *Enduring Word Bible Commentary* by David Guzik.
+This project uses content from the **Enduring Word Bible Commentary** by David Guzik.
 
 ©1996–present The Enduring Word Bible Commentary by David Guzik – [enduringword.com](https://enduringword.com)
 
