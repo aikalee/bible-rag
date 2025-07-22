@@ -1,1 +1,5 @@
+# environment variables
 .env
+
+# models
+models/

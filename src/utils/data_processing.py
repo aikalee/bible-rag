@@ -89,11 +89,11 @@ def parse_content(subpath, content, doc_id):
     chapter = matched.group(2)
 
 
-    cur_h3 = ""
-    cur_h4 = ""
+    title = ""
+    subtitle = ""
 
-    beg = ""
-    end = ""
+    beg_number = ""
+    end_number = ""
 
     beg_chapter = ""
     end_chapter = ""
@@ -103,33 +103,36 @@ def parse_content(subpath, content, doc_id):
 
     docs = []
 
-    verse = []
-    commentary = []
+    verse_list = []
+    commentary_list = []
 
 
     def create_doc():
         nonlocal docs, doc_id
 
-        verse_string = "\n".join(verse)
-        commentary_string = "\n".join(commentary)
+        verse = "\n".join(verse_list)
+        commentary = "\n".join(commentary_list)
 
-        title = f"Title: {cur_h3}" if cur_h3 else ""
-        subtitle = f"\nSubtitle: {cur_h4}" if cur_h4 else ""
-        titled_verse_string = f"\nVerse: {verse_string}" if verse_string else ""
+        title_string = f"Title: {title}" if title else ""
+        subtitle_string = f"\nSubtitle: {subtitle}" if subtitle else ""
+        verse_string = f"\nVerse: {verse}" if verse else ""
+        book_string = f"\nBook: {book}" if book else ""
+        beg_number_string = f"\nBeginning Chapter-Verse Number: {beg_number}" if beg_number else ""
+        end_number_string = f"\nEnding Chapter-Verse Number: {end_number}" if end_number else ""
 
-        text_block = title + subtitle + titled_verse_string 
+        text_block = title_string + subtitle_string + book_string + beg_number_string + end_number_string + verse_string 
 
         doc = {
                 "text": text_block,
                 "metadata": {
                     "doc_id": doc_id,
-                    "title": cur_h3,
-                    "subtitle": cur_h4,
-                    "commentary": commentary_string,
+                    "title": title,
+                    "subtitle": subtitle,
+                    "commentary": commentary,
                     "verse": verse_string,
                     "book": book,
-                    "beg_verse": beg,
-                    "end_verse": end
+                    "beg_verse": beg_number,
+                    "end_verse": end_number
                 },
             }
         
@@ -137,7 +140,7 @@ def parse_content(subpath, content, doc_id):
         doc_id += 1
     
     def extract_number(string):
-        nonlocal beg, end, beg_chapter, end_chapter, beg_verse, end_verse
+        nonlocal beg_number, end_number, beg_chapter, end_chapter, beg_verse, end_verse
 
         pattern = r"(?=.*[:\(\)])(?:(\d+)[ab]?\b(?!\.)\:)?(?:(\d+)[ab]?\b(?!\.))"
             
@@ -179,16 +182,16 @@ def parse_content(subpath, content, doc_id):
             
 
         if beg_chapter and end_chapter:
-            beg = beg_chapter + ":" + beg_verse
-            end = end_chapter + ":" + end_verse
+            beg_number = beg_chapter + ":" + beg_verse
+            end_number = end_chapter + ":" + end_verse
         
         elif beg_chapter:
-            beg = beg_chapter + ":" + beg_verse
-            end = beg_chapter + ":" + end_verse
+            beg_number = beg_chapter + ":" + beg_verse
+            end_number = beg_chapter + ":" + end_verse
 
         else:
-            beg = chapter + ":" + beg_verse
-            end = chapter + ":" + end_verse
+            beg_number = chapter + ":" + beg_verse
+            end_number = chapter + ":" + end_verse
 
         
 
@@ -198,27 +201,27 @@ def parse_content(subpath, content, doc_id):
 
         if child.name == "h3":
             
-            if cur_h3:
-                # === Only if h4 is absent ===
-                if not cur_h4:
+            if title:
+                # only if h4 is absent
+                if not subtitle:
                     create_doc()
-                    verse = []
-                    commentary = []
+                    verse_list = []
+                    commentary_list = []
 
-            cur_h3 = child.get_text()
-            extract_number(cur_h3)
+            title = child.get_text()
+            extract_number(title)
 
             
 
         if child.name == "h4":
 
-            if cur_h4:
+            if subtitle:
                 create_doc()
-                verse = []
-                commentary = []
+                verse_list = []
+                commentary_list = []
                 
-            cur_h4 = child.get_text()
-            extract_number(cur_h4)
+            subtitle = child.get_text()
+            extract_number(subtitle)
 
             
 
@@ -229,20 +232,20 @@ def parse_content(subpath, content, doc_id):
                 if child.get("class")[0] in ["p1", "s1"]:
                 
                     create_doc()
-                    verse = []
-                    commentary = []
+                    verse_list = []
+                    commentary_list = []
                 else:
                     raise ValueError("The document does not end with <p> with attribute class p1 or s1.")
          
             elif child.has_attr("style"):
                 
                 if child.get("style").startswith(("padding-left", "text-align")):
-                    commentary.append(child.get_text())
+                    commentary_list.append(child.get_text())
                 else:
                     raise ValueError("There is a <p> with styles other than padding-left and text-align.")
             
             else:
-                verse.append(child.get_text())
+                verse_list.append(child.get_text())
         
         if child.name == "table":
             
@@ -262,7 +265,7 @@ def parse_content(subpath, content, doc_id):
             writer.writerows(table_data)
 
             csv_text = csv_buffer.getvalue()
-            commentary.append(f"Here is a csv table:\r\n{csv_text}")           
+            commentary_list.append(f"Here is a csv table:\r\n{csv_text}")           
                 
     return docs, doc_id
          
@@ -270,7 +273,7 @@ def parse_content(subpath, content, doc_id):
 def to_json(read_path, write_path):
 
     all_docs = []
-    doc_id = 1
+    doc_id = 0
 
     with open(read_path, "rb") as f:
         chapter_list = pickle.load(f)
