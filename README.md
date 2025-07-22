@@ -3,6 +3,7 @@
 ### Data processing
 - **Number of documents in the corpus:** 9318
 - **Embedding Text:** Only titles, subtitles, and verses are embedded or indexed, due to the embedding model’s context window limitations.
+- **Data Structure:** JSON-formatted documents stored in MongoDB for efficient retrieval.
 
 ### Search Function
 - **Searching Approach:** A hybrid approach combining FAISS for dense vector retrieval and Whoosh for BM25 sparse retrieval, followed by result re-ranking.
@@ -12,7 +13,7 @@
   
 |                |Model Name                                  |  
 |----------------|--------------------------------------------|
-|Embedding model |BAAI/bge-small-en-v1.5                      |
+|Embedder        |BAAI/bge-small-en-v1.5                      |
 |Reranker        |BAAI/bge-reranker                           |
 |Generation model|meta-llama/Llama-3.3-70B-Instruct-Turbo-Free|
 
